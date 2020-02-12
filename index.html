@@ -1,0 +1,91 @@
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+	#vh100 {
+		position: fixed;
+		left: 0;
+		top: 0;
+		height: 100vh;
+		width: 100vw;
+	}
+
+	#container {
+		position: fixed;
+		left: 0;
+		top: 0;
+		display: grid;
+		grid-template-columns: auto auto 1fr;
+		grid-column-gap: 1em;
+	}
+
+	body {
+		height: 200vh;
+	}
+
+	code {
+		grid-column: 1;
+	}
+
+	span {
+		grid-column: 2;
+	}
+
+
+</style>
+<div id="vh100"></div>
+<div id="container"></div>
+<script>
+
+	const vh100 = document.querySelector('#vh100')
+	const container = document.querySelector('#container')
+
+	const functions = [
+		() => window.innerHeight,
+		() => window.outerHeight,
+		() => document.documentElement.clientHeight,
+		() => document.documentElement.offsetHeight,
+		() => document.documentElement.scrollHeight,
+		() => document.body.clientHeight,
+		() => vh100.offsetHeight,
+		() => vh100.clientHeight,
+		() => vh100.scrollHeight,
+		() => window.screen.height,
+		() => window.screen.availHeight,
+		() => vh100.getBoundingClientRect().height,
+	]
+
+	const elements = functions.map(fn => {
+		const code = document.createElement('code')
+		code.innerText = fn.toString()
+		const span = document.createElement('span')
+		container.appendChild(code)
+		container.appendChild(span)
+		return { span, fn }
+	})
+
+	function compute() {
+		elements.forEach(({ span, fn }) => {
+			span.innerText = fn()
+		})
+	}
+
+	let requestId
+	function frame() {
+		requestId = requestAnimationFrame(() => {
+			compute()
+			requestId = undefined
+		})
+	}
+
+	addEventListener('resize', () => {
+		if (!requestId)
+			frame()
+	})
+
+	addEventListener('scroll', () => {
+		if (!requestId)
+			frame()
+	})
+
+	frame()
+
+</script>
