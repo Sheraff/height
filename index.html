@@ -57,6 +57,7 @@
 		() => window.screen.height,
 		() => window.screen.availHeight,
 		() => vh100.getBoundingClientRect().height,
+		() => vh100.getBoundingClientRect().bottom,
 	]
 
 	const elements = functions.map(fn => {
