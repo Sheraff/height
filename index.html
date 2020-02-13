@@ -36,6 +36,9 @@
 	span {
 		grid-column: 2;
 	}
+	span::after {
+		content: ' px';
+	}
 
 	.fn1 {
 		background-color: orange;
@@ -85,8 +88,8 @@
 		() => vh100.scrollHeight,
 		() => window.screen.height,
 		() => window.screen.availHeight,
-		() => vh100.getBoundingClientRect().height,
-		() => vh100.getBoundingClientRect().bottom,
+		// () => vh100.getBoundingClientRect().height,
+		// () => vh100.getBoundingClientRect().bottom,
 	]
 
 	const elements = functions.map(fn => {
