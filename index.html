@@ -21,7 +21,7 @@
 		height: 200vh;
 	}
 
-	span, code {
+	span, code, #instructions {
 		font-family: 'apercu-regular', 'Fira Code', 'Source Code Pro', 'Courier New', Courier, monospace;
 		font-size: 3vmin;
 		line-height: 1.71;
@@ -30,15 +30,44 @@
 
 	code {
 		grid-column: 1;
+		cursor: pointer;
 	}
 
 	span {
 		grid-column: 2;
 	}
 
+	.fn1 {
+		background-color: orange;
+	}
+	.fn2 {
+		background-color: lightblue;
+	}
+
+	code div {
+		display: inline-block;
+		height: calc(3vmin * 1.71);
+		width: calc(3vmin * 1.71);
+		text-align: center;
+	}
+
+	.last {
+		grid-row-start: 99;
+	}
+
+	#instructions {
+		position: fixed;
+		bottom: 5px;
+		color: red;
+	}
+
 </style>
 <div id="vh100"></div>
-<div id="container"></div>
+<div id="container">
+	<code class="last"><div class="fn1">A</div> - <div class="fn2">B</div></code>
+	<span class="last"></span>
+</div>
+<div id="instructions">click on two expressions to compare them</div>
 <script>
 
 	const vh100 = document.querySelector('#vh100')
@@ -50,7 +79,7 @@
 		() => document.documentElement.clientHeight,
 		() => document.documentElement.offsetHeight,
 		() => document.documentElement.scrollHeight,
-		() => document.body.clientHeight,
+		() => document.body.offsetHeight,
 		() => vh100.offsetHeight,
 		() => vh100.clientHeight,
 		() => vh100.scrollHeight,
@@ -66,32 +95,76 @@
 		const span = document.createElement('span')
 		container.appendChild(code)
 		container.appendChild(span)
-		return { span, fn }
+
+		return { code, span, fn }
 	})
 
-	function compute() {
+	function display() {
 		elements.forEach(({ span, fn }) => {
 			span.innerText = fn()
 		})
 	}
 
+	let fn1, fn2
+	const span = document.querySelector('#container span.last')
+	function compute() {
+		if(fn1 && fn2)
+			span.innerText = fn1() - fn2()
+	}
+	fn1 = elements[0].fn
+	elements[0].code.classList.add('fn1')
+	fn2 = elements[1].fn
+	elements[1].code.classList.add('fn2')
+	void function enableClicks(){
+		let bool = false
+		elements.forEach(({code, fn}) => {
+			code.addEventListener('click', () => {
+				if(fn === fn1) {
+					code.classList.remove('fn1')
+					fn1 = undefined
+					bool = false
+					return
+				}
+				if(fn === fn2) {
+					code.classList.remove('fn2')
+					fn2 = undefined
+					bool = true
+					return
+				}
+				if(bool) {
+					const prev = document.querySelector('code.fn2')
+					if(prev)
+						prev.classList.remove('fn2')
+					code.classList.add('fn2')
+					fn2 = fn
+				} else {
+					const prev = document.querySelector('code.fn1')
+					if(prev)
+						prev.classList.remove('fn1')
+					code.classList.add('fn1')
+					fn1 = fn
+				}
+				if(fn1 && fn2)
+					frame()
+				bool = !bool
+			})
+		})
+	}()
+
 	let requestId
 	function frame() {
-		requestId = requestAnimationFrame(() => {
-			compute()
-			requestId = undefined
-		})
+		if (!requestId) {
+			requestId = requestAnimationFrame(() => {
+				display()
+				compute()
+				requestId = undefined
+			})
+		}
 	}
 
-	addEventListener('resize', () => {
-		if (!requestId)
-			frame()
-	})
+	addEventListener('resize', frame)
 
-	addEventListener('scroll', () => {
-		if (!requestId)
-			frame()
-	})
+	addEventListener('scroll', frame)
 
 	frame()
 
