@@ -36,7 +36,7 @@
 	span {
 		grid-column: 2;
 	}
-	span::after {
+	span:not(:empty)::after {
 		content: ' px';
 	}
 
@@ -126,12 +126,14 @@
 					code.classList.remove('fn1')
 					fn1 = undefined
 					bool = false
+					span.innerText = ''
 					return
 				}
 				if(fn === fn2) {
 					code.classList.remove('fn2')
 					fn2 = undefined
 					bool = true
+					span.innerText = ''
 					return
 				}
 				if(bool) {
