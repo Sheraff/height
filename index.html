@@ -169,9 +169,13 @@
 		})
 	}
 
-	jsOrientation.firstElementChild.innerText = window.screen.orientation.type
-	window.screen.orientation.onchange = () => {
+	if(window.screen.orientation) {
 		jsOrientation.firstElementChild.innerText = window.screen.orientation.type
+		window.screen.orientation.onchange = () => {
+			jsOrientation.firstElementChild.innerText = window.screen.orientation.type
+		}
+	} else {
+		jsOrientation.firstElementChild.innerText = 'not supported by browser'
 	}
 
 	let fn1, fn2
