@@ -8,10 +8,14 @@
 		width: 100vw;
 	}
 
-	#container {
+	#fixed {
 		position: fixed;
+		top: 0;
 		left: 0;
-		top: 3em;
+		padding: 1em;
+	}
+
+	#container {
 		display: grid;
 		grid-template-columns: auto auto 1fr;
 		grid-column-gap: 1em;
@@ -21,7 +25,7 @@
 		height: 200vh;
 	}
 
-	span, code, #instructions, #toggle {
+	span, code, #instructions, #toggle, #info {
 		font-family: 'apercu-regular', 'Fira Code', 'Source Code Pro', 'Courier New', Courier, monospace;
 		font-size: 3vmin;
 		line-height: 1.71;
@@ -33,10 +37,10 @@
 		cursor: pointer;
 	}
 
-	span {
+	#container span {
 		grid-column: 2;
 	}
-	span:not(:empty)::after {
+	#container span:not(:empty)::after {
 		content: ' px';
 	}
 
@@ -61,9 +65,7 @@
 	#toggle {
 		background: initial;
 		border-style: initial;
-		position: fixed;
-		bottom: 1em;
-		left: 1em;
+		margin: 1em 0;
 		padding: .25em 1em;
 		border-radius: 5px;
 		box-shadow: 0 0 0 2px red;
@@ -77,7 +79,7 @@
 
 	input {
 		position: fixed;
-		left: 100vw;
+		left: -100vw;
 		font-size: 20px;
 	}
 	#toggle::before {
@@ -94,20 +96,41 @@
 	}
 
 	#instructions {
-		position: fixed;
-		top: 0;
 		color: red;
+	}
+
+	#ratio {
+
+	}
+
+	@media (orientation: landscape) {
+		#ratio::before {
+			content: 'landscape'
+		}
+	}
+	@media (orientation: portrait) {
+		#ratio::before {
+			content: 'portrait'
+		}
 	}
 
 </style>
 <div id="vh100"></div>
-<div id="container">
-	<code class="last"><div class="fn1">A</div> - <div class="fn2">B</div></code>
-	<span class="last"></span>
+<div id="fixed">
+	<div id="instructions">click on two expressions to compare them</div>
+	<div id="info">
+		<div id="ratio"> ratio (CSS `orientation` media query)</div>
+		<div id="jsOrientation"><span></span> (JS `screen.orientation`)</div>
+	</div>
+	
+	<div id="container">
+		<code class="last"><div class="fn1">A</div> - <div class="fn2">B</div></code>
+		<span class="last"></span>
+	</div>
+
+	<input type="text">
+	<button id="toggle">keyboard</button>
 </div>
-<input type="text">
-<button id="toggle">keyboard</button>
-<div id="instructions">click on two expressions to compare them</div>
 <script>
 
 	const vh100 = document.querySelector('#vh100')
@@ -143,6 +166,11 @@
 		elements.forEach(({ span, fn }) => {
 			span.innerText = fn()
 		})
+	}
+
+	jsOrientation.firstElementChild.innerText = window.screen.orientation.type
+	window.screen.orientation.onchange = () => {
+		jsOrientation.firstElementChild.innerText = window.screen.orientation.type
 	}
 
 	let fn1, fn2
