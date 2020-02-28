@@ -21,7 +21,7 @@
 		height: 200vh;
 	}
 
-	span, code, #instructions {
+	span, code, #instructions, #toggle {
 		font-family: 'apercu-regular', 'Fira Code', 'Source Code Pro', 'Courier New', Courier, monospace;
 		font-size: 3vmin;
 		line-height: 1.71;
@@ -58,6 +58,24 @@
 		grid-row-start: 99;
 	}
 
+	#toggle {
+		background: initial;
+		position: fixed;
+		bottom: 100px;
+		padding: .25em 1em;
+		border-radius: 5px;
+		box-shadow: 0 0 0 2px red;
+	}
+	#toggle:focus, #toggle:active {
+		background: initial;
+		outline: initial;
+	}
+
+	input {
+		position: fixed;
+		left: 100vw;
+	}
+
 	#instructions {
 		position: fixed;
 		bottom: 5px;
@@ -70,6 +88,8 @@
 	<code class="last"><div class="fn1">A</div> - <div class="fn2">B</div></code>
 	<span class="last"></span>
 </div>
+<button id="toggle">open keyboard</button>
+<input type="text">
 <div id="instructions">click on two expressions to compare them</div>
 <script>
 
@@ -166,6 +186,14 @@
 			})
 		}
 	}
+
+	toggle.addEventListener('click', () => {
+		const input = document.querySelector('input')
+		if(document.activeElement === input)
+			toggle.focus()
+		else
+			input.focus()
+	})
 
 	addEventListener('resize', frame)
 
