@@ -66,15 +66,23 @@
 		border-radius: 5px;
 		box-shadow: 0 0 0 2px red;
 	}
+	input {
+		position: fixed;
+		left: 100vw;
+	}
+
 	#toggle:focus, #toggle:active {
 		background: initial;
 		outline: initial;
 	}
 
-	input {
-		position: fixed;
-		left: 100vw;
+	#toggle::before {
+		content: 'open '
 	}
+	input:focus + #toggle::before {
+		content: 'close '
+	}
+
 
 	#instructions {
 		position: fixed;
@@ -88,8 +96,8 @@
 	<code class="last"><div class="fn1">A</div> - <div class="fn2">B</div></code>
 	<span class="last"></span>
 </div>
-<button id="toggle">open keyboard</button>
 <input type="text">
+<button id="toggle">keyboard</button>
 <div id="instructions">click on two expressions to compare them</div>
 <script>
 
@@ -187,12 +195,14 @@
 		}
 	}
 
+	let toggleFlag
 	toggle.addEventListener('click', () => {
 		const input = document.querySelector('input')
-		if(document.activeElement === input)
-			toggle.focus()
-		else
+		if(toggleFlag)
 			input.focus()
+		else
+			toggle.focus()
+		toggleFlag = !toggleFlag
 	})
 
 	addEventListener('resize', frame)
