@@ -117,19 +117,20 @@
 </style>
 <div id="vh100"></div>
 <div id="fixed">
-	<div id="instructions">click on two expressions to compare them</div>
 	<div id="info">
 		<div id="ratio"> ratio (CSS `orientation` media query)</div>
 		<div id="jsOrientation"><span></span> (JS `screen.orientation`)</div>
 	</div>
+
+	<input type="text">
+	<button id="toggle">keyboard</button>
 	
 	<div id="container">
 		<code class="last"><div class="fn1">A</div> - <div class="fn2">B</div></code>
 		<span class="last"></span>
 	</div>
+	<div id="instructions">click on two expressions to compare them</div>
 
-	<input type="text">
-	<button id="toggle">keyboard</button>
 </div>
 <script>
 
@@ -233,7 +234,8 @@
 	}
 
 	let toggleFlag
-	toggle.addEventListener('click', () => {
+	toggle.addEventListener('click', (e) => {
+		e.preventDefault()
 		const input = document.querySelector('input')
 		if(toggleFlag)
 			toggle.focus()
