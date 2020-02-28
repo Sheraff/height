@@ -60,29 +60,30 @@
 
 	#toggle {
 		background: initial;
+		border-style: initial;
 		position: fixed;
 		bottom: 100px;
 		padding: .25em 1em;
 		border-radius: 5px;
 		box-shadow: 0 0 0 2px red;
 	}
+	
+	#toggle:focus, #toggle:active {
+		background: initial;
+		outline: initial;
+		border-style: initial;
+	}
+
 	input {
 		position: fixed;
 		left: 100vw;
 	}
-
-	#toggle:focus, #toggle:active {
-		background: initial;
-		outline: initial;
-	}
-
 	#toggle::before {
 		content: 'open '
 	}
 	input:focus + #toggle::before {
 		content: 'close '
 	}
-
 
 	#instructions {
 		position: fixed;
@@ -199,9 +200,9 @@
 	toggle.addEventListener('click', () => {
 		const input = document.querySelector('input')
 		if(toggleFlag)
-			input.focus()
-		else
 			toggle.focus()
+		else
+			input.focus()
 		toggleFlag = !toggleFlag
 	})
 
