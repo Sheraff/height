@@ -17,7 +17,7 @@
 
 	#container {
 		display: grid;
-		grid-template-columns: auto auto 1fr;
+		grid-template-columns: auto auto;
 		grid-column-gap: 1em;
 	}
 
@@ -27,7 +27,7 @@
 
 	span, code, #instructions, #toggle, #info {
 		font-family: 'apercu-regular', 'Fira Code', 'Source Code Pro', 'Courier New', Courier, monospace;
-		font-size: 3vmin;
+		font-size: 2.5vmin;
 		line-height: 1.71;
 		white-space: nowrap;
 	}
@@ -39,6 +39,7 @@
 
 	#container span {
 		grid-column: 2;
+		text-align: right;
 	}
 	#container span:not(:empty)::after {
 		content: ' px';
