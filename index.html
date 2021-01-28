@@ -137,6 +137,23 @@
 
 	const vh100 = document.querySelector('#vh100')
 	const container = document.querySelector('#container')
+	
+	const sensitivity = 100
+	const mediaQueries = []
+	void function startMediaQueries() {
+		for(let i = 1; i <= 100 * 2; i++) {
+			const query = window.matchMedia(`(min-aspect-ratio: ${i}/${sensitivity})`)
+			mediaQueries[i] = false
+			query.addEventListener('change', (e) => {
+				mediaQueries[i][0] = e.matches
+			})
+		}
+	}()
+	
+	function findClosestMediaQuery() {
+		const index = mediaQueries.findIndex(true)
+		return `${index} / 100`
+	}
 
 	const functions = [
 		() => window.innerHeight,
@@ -152,6 +169,7 @@
 		() => window.screen.availHeight,
 		// () => vh100.getBoundingClientRect().height,
 		// () => vh100.getBoundingClientRect().bottom,
+		() => findClosestMediaQuery()
 	]
 
 	const elements = functions.map(fn => {
