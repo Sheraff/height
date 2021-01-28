@@ -22,6 +22,10 @@
 	}
 
 	body {
+		
+	}
+
+	#extra-height {
 		height: 200vh;
 	}
 
@@ -131,15 +135,15 @@
 		<span class="last"></span>
 	</div>
 	<div id="instructions">click on two expressions to compare them</div>
-
 </div>
+<div id="extra-height"></div>
 <script>
 
 	const vh100 = document.querySelector('#vh100')
 	const container = document.querySelector('#container')
 	
 	// handle aspect-ratio media queries
-	const sensitivity = 100
+	const sensitivity = 10000
 	const mediaQueries = []
 	function addListener(mediaQuery, callback) {
 		if (mediaQuery.addEventListener) {
@@ -149,20 +153,20 @@
 		}
 	}
 	void function startMediaQueries() {
-		for(let i = 1; i <= sensitivity * 2; i++) {
+		for(let i = 1; i <= sensitivity * 3; i++) {
 			const query = `(min-aspect-ratio: ${i} / ${sensitivity})`
 			const mql = window.matchMedia(query)
 			mediaQueries[i] = mql.matches
 			addListener(mql, (e) => mediaQueries[i] = e.matches)
 		}
 	}()
-	function findRatioMediaQuery() {
-		const index = mediaQueries.lastIndexOf(true)
-		return `${index} / 100`
+	function heightUsedForCSSMediaQuery() {
+		return Math.round(sensitivity / mediaQueries.lastIndexOf(true) * window.innerWidth)
 	}
 
 	const functions = [
 		() => window.innerHeight,
+		() => window.innerWidth,
 		() => window.outerHeight,
 		() => document.documentElement.clientHeight,
 		() => document.documentElement.offsetHeight,
@@ -175,7 +179,7 @@
 		() => window.screen.availHeight,
 		// () => vh100.getBoundingClientRect().height,
 		// () => vh100.getBoundingClientRect().bottom,
-		() => findRatioMediaQuery()
+		() => heightUsedForCSSMediaQuery(),
 	]
 
 	const elements = functions.map(fn => {
