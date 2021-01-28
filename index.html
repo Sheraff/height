@@ -138,20 +138,26 @@
 	const vh100 = document.querySelector('#vh100')
 	const container = document.querySelector('#container')
 	
+	// handle aspect-ratio media queries
 	const sensitivity = 100
 	const mediaQueries = []
+	function addListener(mediaQuery, callback) {
+		if (mediaQuery.addEventListener) {
+			mediaQuery.addEventListener('change', callback)
+		} else {
+			mediaQuery.addListener(callback)
+		}
+	}
 	void function startMediaQueries() {
-		for(let i = 1; i <= 100 * 2; i++) {
-			const query = window.matchMedia(`(min-aspect-ratio: ${i}/${sensitivity})`)
-			mediaQueries[i] = false
-			query.addEventListener('change', (e) => {
-				mediaQueries[i][0] = e.matches
-			})
+		for(let i = 1; i <= sensitivity * 2; i++) {
+			const query = `(min-aspect-ratio: ${i} / ${sensitivity})`
+			const mql = window.matchMedia(query)
+			mediaQueries[i] = mql.matches
+			addListener(mql, (e) => mediaQueries[i] = e.matches)
 		}
 	}()
-	
-	function findClosestMediaQuery() {
-		const index = mediaQueries.indexOf(true)
+	function findRatioMediaQuery() {
+		const index = mediaQueries.lastIndexOf(true)
 		return `${index} / 100`
 	}
 
@@ -169,7 +175,7 @@
 		() => window.screen.availHeight,
 		// () => vh100.getBoundingClientRect().height,
 		// () => vh100.getBoundingClientRect().bottom,
-		() => findClosestMediaQuery()
+		() => findRatioMediaQuery()
 	]
 
 	const elements = functions.map(fn => {
